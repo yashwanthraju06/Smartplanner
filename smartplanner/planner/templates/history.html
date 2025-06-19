@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Recommendation History | Smart Tour{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg p-4 rounded-4">
+    <h2 class="text-center mb-4">🕘 Your Recommendation History</h2>
+
+    {% if trip_data %}
+      {% for item in trip_data %}
+        <div class="card mb-4 border-start border-success border-4 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">📍 {{ item.trip.destination }}</h5>
+            <p><strong>📅 Dates:</strong> {{ item.trip.start_date }} to {{ item.trip.end_date }}</p>
+            <p><strong>💰 Budget:</strong> ₹{{ item.trip.budget }}</p>
+            <p><strong>🎯 Interests:</strong> {{ item.trip.interests|title }}</p>
+            <hr>
+            <p style="white-space: pre-wrap;">{{ item.itinerary }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-muted text-center">No past recommendations found.</p>
+    {% endif %}
+
+    <div class="text-center mt-3">
+      <a href="{% url 'plan_trip' %}" class="btn btn-success">Plan New Trip</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

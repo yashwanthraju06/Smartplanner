@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Update Profile | Smart Tour{% endblock %}
+
+{% block content %}
+<style>
+  .update-card {
+    backdrop-filter: blur(12px);
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 15px;
+    padding: 30px;
+    margin-top: 50px;
+    color: white;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    max-width: 550px;
+    width: 100%;
+  }
+
+  .update-card input {
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+  }
+
+  .update-card input::placeholder {
+    color: #ddd;
+  }
+
+  .update-card label {
+    font-weight: 600;
+  }
+
+  .form-text,
+  .text-muted {
+    color: #ccc !important;
+  }
+
+  .text-warning {
+    color: #ffb347 !important;
+  }
+
+  body {
+    background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') no-repeat center center fixed;
+    background-size: cover;
+  }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+  <div class="update-card">
+    <h2 class="text-center mb-4">✏️ Update Your Profile</h2>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="mb-3">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.errors %}
+            <div class="text-warning small">{{ field.errors|striptags }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-success w-100">Save Changes</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Smart Destination Recommendation | Smart Tour{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg p-4 rounded-4 glass-form col-md-8 offset-md-2">
+    <h2 class="text-center mb-4">🌐 Get Your Destination Recommendations</h2>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <div class="mb-3">{{ form.destination|as_crispy_field }}</div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">{{ form.start_date|as_crispy_field }}</div>
+        <div class="col-md-6 mb-3">{{ form.end_date|as_crispy_field }}</div>
+      </div>
+
+      <div class="mb-3">{{ form.budget|as_crispy_field }}</div>
+
+      <!-- Interests Checkboxes -->
+      <div class="mb-3">
+        <label class="form-label fw-bold">🎯 Select Your Interests:</label>
+        <div class="d-flex flex-wrap gap-2" id="interest-boxes">
+          {% for interest in interests %}
+            <label class="btn btn-outline-primary interest-label {% if interest in selected_interests %}active{% endif %}">
+              <input type="checkbox" name="interests" value="{{ interest }}" class="btn-check interest-input"
+                     autocomplete="off" {% if interest in selected_interests %}checked{% endif %}>
+              {{ interest|title }}
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Live Selected Interests -->
+      <div class="mb-4">
+        <label class="form-label fw-bold">✅ Selected Interests:</label>
+        <div id="selected-interests" class="d-flex flex-wrap gap-2">
+          {% for interest in selected_interests %}
+            <span class="badge rounded-pill bg-success text-white px-3 py-2">
+              {{ interest|title }}
+            </span>
+          {% empty %}
+            <span class="text-muted">No interests selected yet.</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100">🧠 Generate Smart Suggestions</button>
+    </form>
+
+    <!-- Destination Recommendations -->
+    {% if recommendations %}
+    <div class="mt-5 card p-4 shadow-sm border-success rounded-4 bg-light">
+      <h4 class="mb-3 text-success">🌍 Top 3 Recommended Destinations for You:</h4>
+      <div class="d-flex flex-wrap gap-3 justify-content-center">
+        {% for place in recommendations %}
+        <div class="card border-success" style="min-width: 200px;">
+          <div class="card-body text-center">
+            <h5 class="card-title text-success fw-bold">{{ place }}</h5>
+            <p class="card-text">Curated based on your interests & budget.</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- JavaScript to Update Interests Live -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const selectedContainer = document.getElementById('selected-interests');
+    const checkboxes = document.querySelectorAll('.interest-input');
+
+    function updateSelected() {
+      selectedContainer.innerHTML = '';
+      checkboxes.forEach(cb => {
+        if (cb.checked) {
+          const badge = document.createElement('span');
+          badge.className = 'badge rounded-pill bg-success text-white px-3 py-2';
+          badge.textContent = cb.value.charAt(0).toUpperCase() + cb.value.slice(1);
+          selectedContainer.appendChild(badge);
+        }
+      });
+
+      if (!selectedContainer.hasChildNodes()) {
+        selectedContainer.innerHTML = '<span class="text-muted">No interests selected yet.</span>';
+      }
+    }
+
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', updateSelected);
+    });
+
+    updateSelected(); // Initial load
+  });
+</script>
+{% endblock %}

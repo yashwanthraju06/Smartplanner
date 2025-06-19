@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard | Smart Tour{% endblock %}
+
+{% block content %}
+<style>
+  .dashboard-header {
+    background: linear-gradient(135deg, #007bff 0%, #00c6ff 100%);
+    color: white;
+    padding: 3rem 1rem;
+    text-align: center;
+    border-radius: 0 0 1.5rem 1.5rem;
+  }
+
+  .dashboard-header h2 {
+    font-weight: 700;
+    font-size: 2.5rem;
+  }
+
+  .dashboard-header p {
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+  }
+
+  .card-box {
+    border-radius: 1rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+    padding: 2rem;
+    text-align: center;
+    background-color: #ffffff;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .card-box:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .card-box i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-box h5 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-box p {
+    color: #6c757d;
+    font-size: 0.95rem;
+  }
+
+  .btn-custom {
+    padding: 0.4rem 1.2rem;
+    font-size: 0.9rem;
+    border-radius: 2rem;
+    transition: 0.3s ease;
+  }
+
+  .btn-custom:hover {
+    transform: scale(1.05);
+  }
+
+  .dashboard-actions a {
+    min-width: 140px;
+  }
+
+  @media (max-width: 768px) {
+    .dashboard-header h2 {
+      font-size: 2rem;
+    }
+
+    .card-box {
+      padding: 1.5rem 1rem;
+    }
+  }
+</style>
+
+<div class="dashboard-header">
+  <h2>Welcome, {{ user.first_name|default:user.username }} 👋</h2>
+  <p>Your personalized travel hub awaits. Let’s explore the world together!</p>
+</div>
+
+<div class="container mt-5">
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card-box">
+        <i class="fas fa-suitcase-rolling text-primary"></i>
+        <h5>My Trips</h5>
+        <p>View and manage all your exciting upcoming adventures in one place.</p>
+        <a href="{% url 'recommendation_history' %}" class="btn btn-outline-primary btn-custom mt-3">View Trips</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-box">
+        <i class="fas fa-route text-success"></i>
+        <h5>Create Itinerary</h5>
+        <p>Use AI to generate an optimized travel plan tailored to your interests.</p>
+        <a href="{% url 'plan_trip' %}" class="btn btn-outline-success btn-custom mt-3">Plan New Trip</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-box">
+        <i class="fas fa-wallet text-warning"></i>
+        <h5>Smart Destination Recommendation</h5>
+        <p>Tell us your travel dates, budget, and interests — and we’ll recommend the perfect places to visit!</p>
+        <a href="{% url 'destination_recommendation' %}" class="btn btn-outline-warning btn-custom mt-3">AI Recommender</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-actions text-center mt-5">
+    <a href="{% url 'update_profile' %}" class="btn btn-outline-dark btn-custom me-2">Update Profile</a>
+    <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-custom">Logout</a>
+  </div>
+</div>
+{% endblock %}

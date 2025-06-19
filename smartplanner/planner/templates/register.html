@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block title %}Register | Smart Tour{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') no-repeat center center fixed;
+    background-size: cover;
+  }
+
+  .register-card {
+    backdrop-filter: blur(12px);
+    background: rgba(0, 0, 0, 0.65);
+    border-radius: 16px;
+    padding: 2.5rem;
+    margin-top: 60px;
+    color: #fff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 550px;
+  }
+
+  .register-card input,
+  .register-card select,
+  .register-card textarea {
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+  }
+
+  .register-card input::placeholder {
+    color: #ddd;
+  }
+
+  .register-card label {
+    font-weight: 600;
+  }
+
+  .form-text,
+  .text-muted {
+    color: #ccc !important;
+  }
+
+  .text-warning {
+    color: #ffb347 !important;
+  }
+
+  .btn-google {
+    background-color: #db4437;
+    color: white;
+  }
+
+  .btn-google:hover {
+    background-color: #c23321;
+  }
+
+  .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+
+  .btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+  }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+  <div class="register-card">
+    <h2 class="text-center mb-4">🌍 Register for Smart Tour</h2>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="mb-3">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}
+            <div class="form-text">{{ field.help_text }}</div>
+          {% endif %}
+          {% if field.errors %}
+            <div class="text-warning small">{{ field.errors|striptags }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-success w-100 mt-2">Create My Account</button>
+    </form>
+
+    <hr class="my-4 text-light">
+
+    <p class="text-center">Or register with:</p>
+    <div class="text-center">
+      <a href="{% provider_login_url 'google' %}" class="btn btn-google w-100">
+        <i class="fab fa-google me-2"></i> Sign up with Google
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

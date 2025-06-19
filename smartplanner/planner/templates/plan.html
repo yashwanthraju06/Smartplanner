@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Plan Trip | Smart Tour{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg p-4 rounded-4 glass-form col-md-8 offset-md-2">
+    <h2 class="text-center mb-4">🧳 Plan a New Trip</h2>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <div class="mb-3">
+        {{ form.destination|as_crispy_field }}
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          {{ form.start_date|as_crispy_field }}
+        </div>
+        <div class="col-md-6 mb-3">
+          {{ form.end_date|as_crispy_field }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        {{ form.budget|as_crispy_field }}
+      </div>
+
+      <!-- Interests Checkboxes -->
+      <div class="mb-3">
+        <label class="form-label fw-bold">Select Your Interests:</label>
+        <div class="d-flex flex-wrap gap-2" id="interest-boxes">
+          {% for interest in interests %}
+          <label
+            class="btn btn-outline-primary interest-label {% if interest in selected_interests %}active{% endif %}">
+            <input type="checkbox" name="interests" value="{{ interest }}" class="btn-check interest-input"
+              autocomplete="off" {% if interest in selected_interests %}checked{% endif %}>
+            {{ interest|title }}
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+
+      <!-- Live Selected Interests -->
+      <div class="mb-3">
+        <label class="form-label fw-bold">Selected Interests:</label>
+        <div id="selected-interests" class="d-flex flex-wrap gap-2">
+          {% for interest in selected_interests %}
+          <span class="badge rounded-pill bg-success text-white px-3 py-2">
+            {{ interest|title }}
+          </span>
+          {% empty %}
+          <span class="text-muted">No interests selected yet.</span>
+          {% endfor %}
+        </div>
+      </div>
+
+
+      <button type="submit" class="btn btn-success w-100 mt-3">🧠 Generate Itinerary</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const selectedContainer = document.getElementById('selected-interests');
+    const checkboxes = document.querySelectorAll('.interest-input');
+
+    function updateSelected() {
+      selectedContainer.innerHTML = '';
+      checkboxes.forEach(cb => {
+        if (cb.checked) {
+          const badge = document.createElement('span');
+          badge.className = 'badge rounded-pill bg-success text-white px-3 py-2';
+          badge.textContent = cb.value.charAt(0).toUpperCase() + cb.value.slice(1);
+          selectedContainer.appendChild(badge);
+        }
+      });
+    }
+
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', updateSelected);
+    });
+
+    // Prepopulate on page load if needed
+    updateSelected();
+  });
+</script>
+{% endblock %}
